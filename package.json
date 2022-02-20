@@ -10,6 +10,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:vscode-link.helloWorld"
   ],
   "main": "./dist/extension.js",
