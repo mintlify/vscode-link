@@ -100,7 +100,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			codeFileUris = context.globalState.keys();
 		}
 
-		vscode.window.showInformationMessage('🔗 Relinked!');
+		vscode.window.showInformationMessage('🔗 linked!');
 	});
 
 	let openLink = vscode.commands.registerCommand('vscode-link.open-link', async () => {
