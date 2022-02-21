@@ -15,14 +15,14 @@
   },
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:vscode-link.helloWorld"
+    "onCommand:vscode-link.relink"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-link.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-link.relink",
+        "title": "Relink Documents"
       }
     ]
   },

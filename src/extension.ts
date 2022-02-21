@@ -66,14 +66,14 @@ const storeDocs = async (docFolderUri: vscode.Uri, storageManager: LocalStorageS
 export async function activate(context: vscode.ExtensionContext) {
 	const storageManager = new LocalStorageService(context.globalState);
 	// detect .docs folder + store all values
-	const docFolder: vscode.Uri | null = await getDocFolderUri();
+	let docFolder: vscode.Uri | null = await getDocFolderUri();
 	if (docFolder !== null) {
 		storeDocs(docFolder, storageManager);
 	}
-	const codeFileUris: readonly string[] = context.globalState.keys();
+	let codeFileUris: readonly string[] = context.globalState.keys();
 
 	// enable hover for all the relevant code files
-	vscode.languages.registerHoverProvider(['*'], {
+	const hover = vscode.languages.registerHoverProvider(['*'], {
 		provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
 			if (codeFileUris.includes(document.uri.toString())) {
 				const docInfo: Doc | null = storageManager.getValue(document.uri);
@@ -93,16 +93,17 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-link.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from vscode-link!');
+	let relink = vscode.commands.registerCommand('vscode-link.relink', async () => {
+		docFolder = await getDocFolderUri();
+		if (docFolder !== null) {
+			storeDocs(docFolder, storageManager);
+			codeFileUris = context.globalState.keys();
+		}
+
+		vscode.window.showInformationMessage('Relinked!');
 	});
 
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(relink, hover);
 }
 
 // this method is called when your extension is deactivated
