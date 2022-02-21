@@ -1,14 +1,18 @@
 {
   "name": "vscode-link",
-  "displayName": "vscode-link",
+  "displayName": "Link Docs",
   "description": "Link documentation to code",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.64.0"
   },
   "categories": [
-    "Other"
+    "Visualization", "Other"
   ],
+  "icon": "assets/icon.png",
+  "repository": {
+    "url": "https://github.com/mintlify/vscode-link"
+  },
   "activationEvents": [
     "onStartupFinished",
     "onCommand:vscode-link.helloWorld"
