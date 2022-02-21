@@ -6,7 +6,7 @@ Link your documentation to the relevant code files.
 
 1. Create a .docs folder
 2. In the .docs folder place your markdown documentation files
-3. At the top of your files place "\[\]\(desired-code-file-path\)" at the top
+3. At the top of your files place "\[\]\(desired-code-file-path\)"
 4. Link your documents by pressing Cmd/Ctrl+R
 5. Navigate through your code and see your documentation appear when you hover over your code file.
 6. (Optional) Open up your document by pressing Cmd/Ctrl+8
