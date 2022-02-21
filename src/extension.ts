@@ -100,10 +100,24 @@ export async function activate(context: vscode.ExtensionContext) {
 			codeFileUris = context.globalState.keys();
 		}
 
-		vscode.window.showInformationMessage('Relinked!');
+		vscode.window.showInformationMessage('🔗 Relinked!');
 	});
 
-	context.subscriptions.push(relink, hover);
+	let openLink = vscode.commands.registerCommand('vscode-link.open-link', async () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor === null) { return; }
+		const document = editor?.document;
+		if (document == null) { return; }
+		if (codeFileUris.includes(document.uri.toString())) {
+			const docInfo: Doc | null = storageManager.getValue(document.uri);
+			if (docInfo !== null) {
+				let uri = docInfo.mdFileUri;
+				vscode.commands.executeCommand('markdown.showPreviewToSide', uri);
+			}
+		}
+	});
+
+	context.subscriptions.push(relink, hover, openLink);
 }
 
 // this method is called when your extension is deactivated

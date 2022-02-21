@@ -15,7 +15,8 @@
   },
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:vscode-link.relink"
+    "onCommand:vscode-link.relink",
+    "onCommand:vscode-link.open-link"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -23,8 +24,24 @@
       {
         "command": "vscode-link.relink",
         "title": "Relink Documents"
+      },
+      {
+        "command": "vscode-link.open-link",
+        "title": "Show Document Preview"
       }
-    ]
+    ],
+    "keybindings": [
+			{
+				"key": "ctrl+r",
+				"mac": "cmd+r",
+				"command": "vscode-link.relink"
+			},
+      {
+				"key": "ctrl+8",
+				"mac": "cmd+8",
+				"command": "vscode-link.open-link"
+			}
+		]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
