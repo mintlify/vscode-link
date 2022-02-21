@@ -19,8 +19,8 @@ Have feature requests? Email us at hi@mintlify.com
 
 ### More information
 
-[Website](https://mintlify.com/)
-[Twitter](https://twitter.com/mintlify)
+[Website](https://mintlify.com/) |
+[Twitter](https://twitter.com/mintlify) |
 [Discord](https://discord.gg/6W7GuYuxra)
 
 _Built with 💚 by the Mintlify team_
