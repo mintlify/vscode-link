@@ -81,7 +81,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					const doc = new vscode.MarkdownString(docInfo.content);
 					const args = [docInfo.mdFileUri];
 					const openCommandUri = vscode.Uri.parse(
-						`command:vscode.open?${encodeURIComponent(JSON.stringify(args))}`
+						`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
 					);
 					const footer = new vscode.MarkdownString(`[Open document](${openCommandUri})`, true);
 					footer.isTrusted = true;
