@@ -21,7 +21,7 @@ const getDocFolderUri = async () : Promise<vscode.Uri | null> => {
 const getRelatedCodeFilePath = (mdContent: string): string => {
 	const firstLine = mdContent.split('\n')[0];
 	// regex for [whatever](path)
-	var regExp = /\[[^)]+\]\(([^)]+)\)/;
+	var regExp = /\[[^)]*\]\(([^)]+)\)/;
 	const fileExtension = regExp.exec(firstLine)![1];
 	return fileExtension;
 };
@@ -78,10 +78,14 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (codeFileUris.includes(document.uri.toString())) {
 				const docInfo: Doc | null = storageManager.getValue(document.uri);
 				if (docInfo !== null) {
-					const doc = new vscode.MarkdownString(docInfo.content, true);
-					return new vscode.Hover([doc]);
-					// TODO: append "Open document" + make it look nice
-					// gitlens?
+					const doc = new vscode.MarkdownString(docInfo.content);
+					const args = [docInfo.mdFileUri];
+					const openCommandUri = vscode.Uri.parse(
+						`command:vscode.open?${encodeURIComponent(JSON.stringify(args))}`
+					);
+					const footer = new vscode.MarkdownString(`[Open document](${openCommandUri})`, true);
+					footer.isTrusted = true;
+					return new vscode.Hover([doc, footer]);
 				}
 			}
 			return null;
