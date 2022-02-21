@@ -64,13 +64,13 @@ const storeDocs = async (docFolderUri: vscode.Uri, storageManager: LocalStorageS
 };
 
 export async function activate(context: vscode.ExtensionContext) {
-	const storageManager = new LocalStorageService(context.globalState);
+	const storageManager = new LocalStorageService(context.workspaceState);
 	// detect .docs folder + store all values
 	let docFolder: vscode.Uri | null = await getDocFolderUri();
 	if (docFolder !== null) {
 		storeDocs(docFolder, storageManager);
 	}
-	let codeFileUris: readonly string[] = context.globalState.keys();
+	let codeFileUris: readonly string[] = context.workspaceState.keys();
 
 	// enable hover for all the relevant code files
 	const hover = vscode.languages.registerHoverProvider(['*'], {
@@ -93,14 +93,19 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	let relink = vscode.commands.registerCommand('vscode-link.relink', async () => {
+	let relink = async () => {
 		docFolder = await getDocFolderUri();
 		if (docFolder !== null) {
 			storeDocs(docFolder, storageManager);
-			codeFileUris = context.globalState.keys();
+			codeFileUris = context.workspaceState.keys();
 		}
+	};
 
-		vscode.window.showInformationMessage('🔗 linked!');
+	vscode.workspace.onDidSaveTextDocument((doc) => {
+		const uri = doc.uri;
+		if(uri.path.includes('/.docs/')) {
+			relink();
+		}
 	});
 
 	let openLink = vscode.commands.registerCommand('vscode-link.open-link', async () => {
@@ -117,7 +122,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(relink, hover, openLink);
+	context.subscriptions.push(hover, openLink);
 }
 
 // this method is called when your extension is deactivated
