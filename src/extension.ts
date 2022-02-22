@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const openCommandUri = vscode.Uri.parse(
 				`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
 			);
-			const doc = new vscode.MarkdownString(`*🔗 [Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
+			const doc = new vscode.MarkdownString(`*[🔗 Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
 			doc.supportHtml = true;
 			doc.isTrusted = true;
 			return new vscode.Hover([doc]);
@@ -48,16 +48,36 @@ export async function activate(context: vscode.ExtensionContext) {
 		return null;
 	};
 
+	const showDocHovers = (uris: vscode.Uri[]): vscode.Hover | null => {
+		if (uris.length === 0) { return null; }
+		const mdDocs: vscode.MarkdownString[] = [];
+		uris.forEach(uri => {
+			const docInfo: Doc | null = storageManager.getValue(uri);
+			if (docInfo !== null) {
+				const args = [docInfo.mdFileUri];
+				const openCommandUri = vscode.Uri.parse(
+					`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
+				);
+				const doc = new vscode.MarkdownString(`*[🔗 Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
+				doc.supportHtml = true;
+				doc.isTrusted = true;
+				mdDocs.push(doc);
+			}
+		});
+		if (mdDocs.length === 0) { return null; }
+		return new vscode.Hover(mdDocs);
+	};
+
 	// enable hover for all the relevant code files
 	const hover = vscode.languages.registerHoverProvider(['*'], {
 		provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken) {
 			const uri = document.uri.toString();
-			const subPath = matchingSubPath(codeFileUris, uri);
+			const subPaths = matchingSubPath(codeFileUris, uri);
 			if (codeFileUris.includes(uri)) {
 				return showDocHover(document.uri);
-			} else if (subPath.length > 0) {
-				const subPathUri = vscode.Uri.parse(subPath[0]);
-				return showDocHover(subPathUri);
+			} else if (subPaths.length > 0) {
+				const subPathUris = subPaths.map(subpath => vscode.Uri.parse(subpath));
+				return showDocHovers(subPathUris);
 			}
 			return null;
 		}
@@ -93,18 +113,24 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	};
 
+	const getLowestLevelUri = (uris: string[]): string => {
+		return uris.reduce(function(a, b) {
+			return a.length >= b.length ? a : b; // the longer the path, the lower it is
+		});
+	};
+
 	let openLink = vscode.commands.registerCommand('mintlify.open-link', async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (editor === null) { return; }
 		const document = editor?.document;
 		if (document == null) { return; }
 		const uri = document.uri.toString();
-		const subPath = matchingSubPath(codeFileUris, uri);
+		const subPaths = matchingSubPath(codeFileUris, uri);
 		if (codeFileUris.includes(uri)) {
 			openLinkGivenUri(document.uri);
-		} else if (subPath.length > 0) {
-			const subPathUri = vscode.Uri.parse(subPath[0]);
-			openLinkGivenUri(subPathUri);
+		} else if (subPaths.length > 0) {
+			const lowestLvlUri = vscode.Uri.parse(getLowestLevelUri(subPaths));
+			await openLinkGivenUri(lowestLvlUri);
 		} else {
 			vscode.window.showInformationMessage('🔒 No link detected.');
 		}

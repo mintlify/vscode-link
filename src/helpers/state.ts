@@ -53,6 +53,5 @@ const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService,
 export const updateDocs = async (docFolderUri: Uri, storageManager: LocalStorageService) => {
 	const files = await workspace.fs.readDirectory(docFolderUri);
 	const relevantCodeFiles = await storeDocs(docFolderUri, storageManager, files);
-	console.log(relevantCodeFiles);
 	unlinkDeletedLinks(docFolderUri, storageManager, relevantCodeFiles);
 };
