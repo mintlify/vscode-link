@@ -1,3 +1,11 @@
+const removeSlash = (fileName: string): string => {
+	if (fileName.charAt(fileName.length - 1) === '\\') {
+		return fileName.slice(0,-1);
+	} else {
+		return fileName;
+	}
+};
+
 const getRelatedCodeFilePaths = (mdContent: string): string[] => {
 	const firstChunk = mdContent.split('\n\n')[0];
   const lines = firstChunk.split('\n');

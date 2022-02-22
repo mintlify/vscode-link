@@ -1,9 +1,27 @@
-import { Uri, workspace } from 'vscode';
+import { Uri, workspace, FileType } from 'vscode';
 import { LocalStorageService } from '../types';
 import { getRelatedCodeFileInfo } from './parser';
 
-export const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService) => {
-	const files = await workspace.fs.readDirectory(docFolderUri);
+const unlinkDeletedLinks = async (docFolderUri: Uri, storageManager: LocalStorageService, files: [string, FileType][]) => {
+	const keys = storageManager.keys();
+
+	keys.forEach((key) => {
+		let fileMatchExists = false;
+		files.forEach((file) => {
+			const curFileName = file[0];
+			const curFilePath = `${docFolderUri}/${curFileName}`;
+			const curFilePathUri = Uri.parse(curFilePath);
+			if (curFilePathUri.toString() === key) {
+				fileMatchExists = true;
+			}
+		});
+		if (!fileMatchExists) {
+			storageManager.clearValue(key);
+		}
+	});
+};
+
+const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService, files: [string, FileType][]) => {
 	files.forEach(async file => {
 		const curFileName = file[0];
 		const curFilePath = `${docFolderUri}/${curFileName}`;
@@ -23,7 +41,14 @@ export const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageS
 			}
 		} else {
 			// if folder, traverse thru it
-			await storeDocs(curFilePathUri, storageManager);
+			const subFiles = await workspace.fs.readDirectory(curFilePathUri);
+			await storeDocs(curFilePathUri, storageManager, subFiles);
 		}
 	});
+};
+
+export const updateDocs = async (docFolderUri: Uri, storageManager: LocalStorageService) => {
+	const files = await workspace.fs.readDirectory(docFolderUri);
+	await storeDocs(docFolderUri, storageManager, files);
+	await unlinkDeletedLinks(docFolderUri, storageManager, files);
 };

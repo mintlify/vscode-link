@@ -19,4 +19,12 @@ export class LocalStorageService {
   public isEmpty(): boolean {
     return this.storage.keys().length === 0;
   }
+
+  public keys(): readonly string[] {
+    return this.storage.keys();
+  }
+
+  public clearValue(uri: string) {
+    this.storage.update(uri, undefined);
+  }
 }
