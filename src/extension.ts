@@ -94,12 +94,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscode.workspace.onDidSaveTextDocument(async (doc) => {
 		const uri = doc.uri;
 		if(uri.path.includes('/docs/')) {
-			vscode.window.withProgress({
-				location: vscode.ProgressLocation.Notification,
-				title: '⛓️ Relinking links',
-			}, async () => {
-				await relink();
-			});
+			await relink();
 		}
 	});
 
