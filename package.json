@@ -3,6 +3,7 @@
   "displayName": "Link Docs",
   "description": "Link documentation to code",
   "version": "0.0.1",
+  "publisher": "mintlify",
   "engines": {
     "vscode": "^1.64.0"
   },
