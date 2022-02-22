@@ -64,7 +64,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	let openLink = vscode.commands.registerCommand('vscode-link.open-link', async () => {
+	let openLink = vscode.commands.registerCommand('mintlify.open-link', async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (editor === null) { return; }
 		const document = editor?.document;
