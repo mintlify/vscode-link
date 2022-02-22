@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			const openCommandUri = vscode.Uri.parse(
 				`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
 			);
-			const doc = new vscode.MarkdownString(`*[🔗 Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
+			const doc = new vscode.MarkdownString(`[🔗 Open document (⌘ + 8)](${openCommandUri}) <div>${docInfo.content}</div>`);
 			doc.supportHtml = true;
 			doc.isTrusted = true;
 			return new vscode.Hover([doc]);
@@ -58,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				const openCommandUri = vscode.Uri.parse(
 					`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
 				);
-				const doc = new vscode.MarkdownString(`*[🔗 Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
+				const doc = new vscode.MarkdownString(`[🔗 Open document (⌘ + 8)](${openCommandUri}) <div>${docInfo.content}</div>`);
 				doc.supportHtml = true;
 				doc.isTrusted = true;
 				mdDocs.push(doc);
