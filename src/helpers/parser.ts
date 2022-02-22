@@ -15,7 +15,7 @@ const getRelatedCodeFilePaths = (mdContent: string): string[] => {
 	lines.forEach((line) => {
 		const fileName = regExp.exec(line);
 		if (fileName != null && fileName[1] != null) { 
-			fileNames.push(fileName[1]);
+			fileNames.push(removeSlash(fileName[1]));
 		}
 	});
 

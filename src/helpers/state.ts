@@ -2,16 +2,13 @@ import { Uri, workspace, FileType } from 'vscode';
 import { LocalStorageService } from '../types';
 import { getRelatedCodeFileInfo } from './parser';
 
-const unlinkDeletedLinks = async (docFolderUri: Uri, storageManager: LocalStorageService, files: [string, FileType][]) => {
+const unlinkDeletedLinks = (docFolderUri: Uri, storageManager: LocalStorageService, files: Uri[]) => {
 	const keys = storageManager.keys();
 
 	keys.forEach((key) => {
 		let fileMatchExists = false;
 		files.forEach((file) => {
-			const curFileName = file[0];
-			const curFilePath = `${docFolderUri}/${curFileName}`;
-			const curFilePathUri = Uri.parse(curFilePath);
-			if (curFilePathUri.toString() === key) {
+			if (file.toString() === key) {
 				fileMatchExists = true;
 			}
 		});
@@ -21,8 +18,9 @@ const unlinkDeletedLinks = async (docFolderUri: Uri, storageManager: LocalStorag
 	});
 };
 
-const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService, files: [string, FileType][]) => {
-	files.forEach(async file => {
+const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService, files: [string, FileType][]): Promise<Uri[]> => {
+	const codeFiles: Uri[] = [];
+	const filePromises = files.map(async file => {
 		const curFileName = file[0];
 		const curFilePath = `${docFolderUri}/${curFileName}`;
 		const curFilePathUri = Uri.parse(curFilePath);
@@ -36,7 +34,10 @@ const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService,
 				if (codeFileInfo != null) {
 					const codeFilePathUris = codeFileInfo.paths.map((path) => Uri.joinPath(docFolderUri, path)); // key = code filename
 					const value = { mdFileUri: curFilePathUri, content: codeFileInfo.desiredContent };
-					codeFilePathUris.map((uri) => storageManager.setValue(uri, value));
+					codeFilePathUris.map((uri) => {
+						storageManager.setValue(uri, value);
+						codeFiles.push(uri);
+					});
 				}
 			}
 		} else {
@@ -45,10 +46,13 @@ const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageService,
 			await storeDocs(curFilePathUri, storageManager, subFiles);
 		}
 	});
+	await Promise.all(filePromises);
+	return codeFiles;
 };
 
 export const updateDocs = async (docFolderUri: Uri, storageManager: LocalStorageService) => {
 	const files = await workspace.fs.readDirectory(docFolderUri);
-	await storeDocs(docFolderUri, storageManager, files);
-	await unlinkDeletedLinks(docFolderUri, storageManager, files);
+	const relevantCodeFiles = await storeDocs(docFolderUri, storageManager, files);
+	console.log(relevantCodeFiles);
+	unlinkDeletedLinks(docFolderUri, storageManager, relevantCodeFiles);
 };

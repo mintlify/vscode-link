@@ -67,15 +67,20 @@ export async function activate(context: vscode.ExtensionContext) {
 	let relink = async () => {
 		docFolder = await getDocFolderUri();
 		if (docFolder !== null) {
-			updateDocs(docFolder, storageManager);
+			await updateDocs(docFolder, storageManager);
 			codeFileUris = context.workspaceState.keys();
 		}
 	};
 
-	vscode.workspace.onDidSaveTextDocument((doc) => {
+	vscode.workspace.onDidSaveTextDocument(async (doc) => {
 		const uri = doc.uri;
 		if(uri.path.includes('/docs/')) {
-			relink();
+			vscode.window.withProgress({
+				location: vscode.ProgressLocation.Notification,
+				title: '⛓️ Relinking links',
+			}, async () => {
+				await relink();
+			});
 		}
 	});
 
@@ -87,7 +92,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		} else {
 			vscode.window.showInformationMessage('🔒 No link detected.');
 		}
-	}
+	};
 
 	let openLink = vscode.commands.registerCommand('mintlify.open-link', async () => {
 		const editor = vscode.window.activeTextEditor;
