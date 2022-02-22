@@ -8,7 +8,7 @@ const getDocFolderUri = async () : Promise<vscode.Uri | null> => {
 	const root = vscode.workspace?.workspaceFolders![0]?.uri;
 	const files = await vscode.workspace.fs.readDirectory(root);
 	const docFolder: [string, vscode.FileType] | undefined = files.find(file => {
-		return file[1] === 2 && file[0] === '.docs';
+		return file[1] === 2 && file[0] === 'docs';
 	});
 	if (typeof docFolder === 'undefined') {
 		return null;
@@ -21,7 +21,7 @@ const getDocFolderUri = async () : Promise<vscode.Uri | null> => {
 
 export async function activate(context: vscode.ExtensionContext) {
 	const storageManager = new LocalStorageService(context.workspaceState);
-	// detect .docs folder + store all values
+	// detect docs folder + store all values
 	let docFolder: vscode.Uri | null = await getDocFolderUri();
 	if (docFolder !== null) {
 		storeDocs(docFolder, storageManager);
@@ -59,7 +59,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	vscode.workspace.onDidSaveTextDocument((doc) => {
 		const uri = doc.uri;
-		if(uri.path.includes('/.docs/')) {
+		if(uri.path.includes('/docs/')) {
 			relink();
 		}
 	});
