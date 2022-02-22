@@ -36,15 +36,14 @@ export async function activate(context: vscode.ExtensionContext) {
 	const showDocHover = (uri: vscode.Uri): vscode.Hover | null => {
 		const docInfo: Doc | null = storageManager.getValue(uri);
 		if (docInfo !== null) {
-			const doc = new vscode.MarkdownString(`*🔗 Documentation linked by [Mintlify](https://www.mintlify.com/)* <div>${docInfo.content}</div>`);
-			doc.supportHtml = true;
 			const args = [docInfo.mdFileUri];
 			const openCommandUri = vscode.Uri.parse(
 				`command:markdown.showPreviewToSide?${encodeURIComponent(JSON.stringify(args))}`
 			);
-			const footer = new vscode.MarkdownString(`[Open document](${openCommandUri})`);
-			footer.isTrusted = true;
-			return new vscode.Hover([doc, footer]);
+			const doc = new vscode.MarkdownString(`*🔗 [Open document](${openCommandUri})* <div>${docInfo.content}</div>`);
+			doc.supportHtml = true;
+			doc.isTrusted = true;
+			return new vscode.Hover([doc]);
 		}
 		return null;
 	};
