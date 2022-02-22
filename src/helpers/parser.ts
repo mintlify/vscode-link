@@ -3,8 +3,14 @@ const getRelatedCodeFilePaths = (mdContent: string): string[] => {
   const lines = firstChunk.split('\n');
 	// regex for [whatever](path)
 	var regExp = /\[[^)]*\]\(([^)]+)\)/;
-	const fileNames = lines.map((line) => regExp.exec(line)![1]);
-  console.log(fileNames);
+	const fileNames: string[] = [];
+	lines.forEach((line) => {
+		const fileName = regExp.exec(line);
+		if (fileName != null && fileName[1] != null) { 
+			fileNames.push(fileName[1]);
+		}
+	});
+
 	return fileNames;
 };
 
@@ -15,8 +21,11 @@ const getDesiredContent = (mdContent: string): string => {
 	return desiredContent;
 };
 
-export const getRelatedCodeFileInfo = (mdContent: string): { paths: string[]; desiredContent: string } => {
+export const getRelatedCodeFileInfo = (mdContent: string): { paths: string[]; desiredContent: string } | null => {
 	const paths = getRelatedCodeFilePaths(mdContent);
+	if (paths.length === 0) {
+		return null;
+	}
 	const desiredContent = getDesiredContent(mdContent);
 	return {paths, desiredContent};
 };

@@ -74,7 +74,11 @@ export async function activate(context: vscode.ExtensionContext) {
 			if (docInfo !== null) {
 				let uri = docInfo.mdFileUri;
 				vscode.commands.executeCommand('markdown.showPreviewToSide', uri);
+			} else {
+				vscode.window.showInformationMessage('🔒 No link detected.');
 			}
+		} else {
+			vscode.window.showInformationMessage('🔒 No link detected.');
 		}
 	});
 

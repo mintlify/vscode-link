@@ -31,8 +31,16 @@
 				"mac": "cmd+8",
 				"command": "mintlify.open-link"
 			}
-		]
+		],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "mintlify.open-link"
+        }
+      ]
+    }
   },
+  
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "webpack",

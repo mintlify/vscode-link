@@ -14,10 +14,12 @@ export const storeDocs = async (docFolderUri: Uri, storageManager: LocalStorageS
 			if (fileExtension !== null && fileExtension === 'md') {
 				const readFileRaw = await workspace.fs.readFile(curFilePathUri);
 				const fileContent = readFileRaw.toString();
-				const { paths, desiredContent } = getRelatedCodeFileInfo(fileContent);
-				const codeFilePathUris = paths.map((path) => Uri.joinPath(docFolderUri, path)); // key = code filename
-				const value = { mdFileUri: curFilePathUri, content: desiredContent };
-        codeFilePathUris.map((uri) => storageManager.setValue(uri, value));
+				const codeFileInfo = getRelatedCodeFileInfo(fileContent);
+				if (codeFileInfo != null) {
+					const codeFilePathUris = codeFileInfo.paths.map((path) => Uri.joinPath(docFolderUri, path)); // key = code filename
+					const value = { mdFileUri: curFilePathUri, content: codeFileInfo.desiredContent };
+					codeFilePathUris.map((uri) => storageManager.setValue(uri, value));
+				}
 			}
 		} else {
 			// if folder, traverse thru it
