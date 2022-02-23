@@ -1,8 +1,9 @@
 {
-  "name": "link",
+  "name": "linked",
   "displayName": "Link Docs",
   "description": "Link documentation to code",
   "version": "1.0.0",
+  "publisher": "mintlify",
   "engines": {
     "vscode": "^1.64.0"
   },
@@ -50,7 +51,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
