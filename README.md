@@ -1,15 +1,21 @@
 # 🔗 Link Docs
 
-Link your documentation to the relevant code files.
+Providee context to your code without cluttering it. Use Link Docs to link your documentation to relevant code files.
 
 ## How to link your documents
 
 1. Create a folder named `docs`
 2. In the docs folder place your markdown documentation files
-3. Link code files to your documentation by declaring one of the link types listed below
-4. Navigate through your code and see your documentation appear when you hover over linked code files and open up your document by pressing Cmd/Ctrl+8
+3. 🔗Link documentation to code
+4. Hover over your code and see your documentation appear!
 
-## 🔗 Link Types
+<img src="/assets/Hover.png" width="250px" />
+
+5. Open up a document preview by pressing Cmd/Ctrl+8
+
+<img src="/assets/cmd+8.png" width="520px" />
+
+## 🔗 Different Ways to Link
 
 ### 🗄 Files
 
