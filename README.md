@@ -29,13 +29,13 @@ Documentation content...
 
 🚨 Do not forget the newline separating the link and the content!
 
-![File demo](/assets/Files.gif)
+<img src="/assets/Files.gif" width="600px" />
 
 ### 📁 Folders
 
 The link format is the same as above.
 
-![Folder demo](/assets/Folders.gif)
+<img src="/assets/Folders.gif" width="600px" />
 
 ### ⛓ One-to-Many
 
@@ -54,7 +54,7 @@ Documentation content...
 
 🚨 Do not forget the newline separating the link and the content!
 
-![One-to-Many demo](/assets/one-to-many.gif)
+<img src="/assets/one-to-many.gif" width="600px" />
 Note: When multiple docs are linked to the same file, the lowest level path will be returned when you press Cmd/Ctrl+8. You can access all the other documents associated with the file by scrolling through the hover.
 
 ## Known Issues
