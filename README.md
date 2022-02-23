@@ -55,17 +55,19 @@ Documentation content...
 🚨 Do not forget the newline separating the link and the content!
 
 <img src="/assets/one-to-many.gif" width="600px" />
+
 Note: When multiple docs are linked to the same file, the lowest level path will be returned when you press Cmd/Ctrl+8. You can access all the other documents associated with the file by scrolling through the hover.
 
 ## Known Issues
 
 - Local pictures do not show up in the hover preview
 
-Have feature requests? Email us at hi@mintlify.com
+Have feature requests? Email us at hi@mintlify.com or leave an issue on our [GitHub](https://github.com/mintlify/vscode-link)
 
 ### More information
 
 [Website](https://mintlify.com/) |
+[GitHub](https://github.com/mintlify/vscode-link) |
 [Twitter](https://twitter.com/mintlify) |
 [Discord](https://discord.gg/6W7GuYuxra)
 
