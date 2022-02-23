@@ -13,7 +13,7 @@ Providee context to your code without cluttering it. Use Link Docs to link your 
 
 5. Open up a document preview by pressing Cmd/Ctrl+8
 
-<img src="/assets/cmd+8.png" width="520px" />
+<img src="/assets/cmd+8.png" width="600px" />
 
 ## 🔗 Different Ways to Link
 
